@@ -1,5 +1,6 @@
 import { deal, htmlify, must } from "./utils";
 import type { ErrorResponse } from "./types/response";
+import { storeToken } from "./store";
 
 const ERROR_C = "error"
 const LOGIN_ERROR_MESSAGE_ID = 'login-error-message'
@@ -11,7 +12,7 @@ type FieldError = "too long" | "empty" | ""
 const FIELD_MAX_LEN = 1000
 
 
-export const loginPageEl = htmlify(/* html */ `
+const loginPageEl = htmlify(/* html */ `
   <div>
       <div>Log into your reboot01 account</div>
       <div id="${FORM_SUBMIT_ERROR_ID}" hidden></div>
@@ -31,6 +32,10 @@ export const loginPageEl = htmlify(/* html */ `
   </div>
 `);
 
+export function showLoginPage(appEl: HTMLElement) {
+    appEl.replaceChildren(loginPageEl)
+}
+
 const formEl = must(loginPageEl.querySelector<HTMLFormElement>('form'))
 
 const loginEl = must(loginPageEl.querySelector<HTMLInputElement>('input[type="text"]'))
@@ -41,6 +46,7 @@ const passwordErrEl = must(loginPageEl.querySelector<HTMLElement>('#' + PASSWORD
 
 const buttonEl = must(loginPageEl.querySelector<HTMLButtonElement>('button'))
 const formSubmitErrEl = must(loginPageEl.querySelector<HTMLElement>('#' + FORM_SUBMIT_ERROR_ID))
+
 
 loginEl.addEventListener("input", () => {
   const err = checkFieldValidity(loginEl)
@@ -67,24 +73,23 @@ formEl.addEventListener("submit", async (e) => {
   const pass = passwordEl.value;
   const authStr = new TextEncoder().encode(`${login}:${pass}`).toBase64()
   const [res, err] = await deal(fetch(`https://learn.reboot01.com/api/auth/signin`, {
-      method: "POST",
-      headers: {
-          Authorization: `Basic ${authStr}`
-      }
+    method: "POST",
+    headers: {
+        Authorization: `Basic ${authStr}`
+    }
   }
   ));
   if (err) {
     showNetworkErr(formSubmitErrEl, "failed to send login information")
     return
   }
-  const json = await res.json()
     if (!res.ok) {
-      showRequestErr(formSubmitErrEl, json as ErrorResponse)
+      const json = await res.json() as ErrorResponse
+      showRequestErr(formSubmitErrEl, json)
       return
   }
   hideErr(formSubmitErrEl)
-  console.log(json)
-  
+  storeToken(await res.text())
 })
 
 function checkFieldValidity(el: HTMLInputElement): FieldError {
