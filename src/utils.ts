@@ -1,4 +1,3 @@
-import { parser } from "./shared"
 
 export function must<T>(param: T | null | undefined): T {
   if (param === null || param === undefined) {
@@ -7,11 +6,17 @@ export function must<T>(param: T | null | undefined): T {
   return param
 }
 
-export function htmlify<T extends HTMLElement>(strEl: string): T {
-  const doc = parser.parseFromString(strEl.trim(), 'text/html')
-  if (doc.querySelector('parseerror')) {
-    throw new Error("string contains malformed html")
-  }
+export function htmlify(strEl: string): DocumentFragment {
+  const template = document.createElement("template");
+  template.innerHTML = strEl.trim();
+  return template.content
+}
 
-  return doc.body as T
+export async function deal<T>(promise: Promise<T>): Promise<[T, null] | [null, Error]> {
+    try {
+        const res = await promise
+        return [res, null]
+    } catch (err) {
+        return [null, err as Error]
+    }
 }
