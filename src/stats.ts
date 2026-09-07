@@ -104,16 +104,6 @@ const homePageEl = htmlify(/*html */ `
                 <div id="${FAILS_ID}"></div>
             </div>
             <div id="${PASSES_VS_FAILS_GRAPH_ID}"></div>
-            <div class="audit-ratio-legend">
-              <div class="color-group">
-                  <div class="green-box color-box"></div>
-                  <div>passes</div>
-              </div>
-              <div class="color-group">
-                  <div class="red-box color-box"></div>
-                  <div>fails</div>
-              </div>
-          </div>
       </div>
   </div>
 `)
@@ -275,7 +265,7 @@ async function getPassesVsFails(passesEl: HTMLElement, failsEl: HTMLElement, con
 
     const graph = drawPassesVsFailGraph({
         passes,
-        fails,
+        fails: 3,
         passesColor: 'green',
         failsColor: 'red'
     })

@@ -29,6 +29,16 @@ type RectParams = {
     fill: string
 }
 
+type TextParams = {
+    text: string
+    x: number
+    y: number
+    xAlign: "middle" | undefined
+    yAlign: "central" | undefined
+    fontSize: number | undefined
+    fontFamily: string | undefined
+}   
+
 
 export function drawAuditRatioGraph({ up, down, upColor, downColor }: {
     up: number,
@@ -110,17 +120,26 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
     const svgHeight = svg.viewBox.baseVal.height
     const svgWidth = svg.viewBox.baseVal.width
     const dim = {
+        yAxisTextXi: 2,
+        tickCount: 6,
         yi: 10,
         yf: svgHeight - 10,
+        xi: 10,
         barWidth: 5,
-        floorHeight: 2.5,
-        pillerWidth: 2.5
+        floorHeight: 1,
+        pillerWidth: 1,
+        tickWidth: 3,
+        tickHeight: 1,
+        xAxisTextYi: 5,
+        textFontSize: 3
     }
 
     const total = passes + fails
     const passesHeight = (dim.yf - dim.yi) * (passes / total)
+    const passesBarCx = dim.xi + svgWidth / 2 / 2
+    const failsBarCx = dim.xi + svgWidth / 2 + svgWidth / 2 / 2
     const passesBar: RectParams = {
-        x: ((svgWidth / 2) / 2) - dim.barWidth / 2,
+        x: passesBarCx - dim.barWidth / 2,
         y: dim.yf - passesHeight,
         height: passesHeight,
         width: dim.barWidth,
@@ -128,14 +147,14 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
     }
     const failsHeight = (dim.yf - dim.yi) * (fails / total)
     const failsBar: RectParams = {
-        x: (svgWidth / 2) + (((svgWidth / 2) / 2) - dim.barWidth / 2),
+        x: failsBarCx - dim.barWidth / 2,
         y: dim.yf - failsHeight,
         height: failsHeight,
         width: dim.barWidth,
         fill: failsColor
     }
     const baseLine: RectParams = {
-        x: 0,
+        x: dim.xi,
         y: dim.yf,
         height: dim.floorHeight,
         width: svgWidth,
@@ -143,23 +162,74 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
     }
     const totalHeight = (dim.yf - dim.yi)
     const pillarLine: RectParams = {
-        x: 0,
+        x: dim.xi,
         y: dim.yi,
         height: totalHeight,
         width: dim.pillerWidth,
         fill: 'gray'
     }
+
+    const yTicks: number[] = []
+    const dy = totalHeight/dim.tickCount
+    for (let i = 1; i < dim.tickCount; i++) {
+        yTicks.push(dim.yf - dy * i)
+    }
+    yTicks.push(dim.yi)
+    const ticks = yTicks.map(val => {
+        return createRectangle({
+            fill: 'gray',
+            x: dim.xi - dim.tickWidth + dim.pillerWidth,
+            y: val - dim.tickHeight/2,
+            height: dim.tickHeight,
+            width: dim.tickWidth
+        })
+    })
+    const textTicks = []
+    const dy2 = total / dim.tickCount
+    for (let i = 1; i < dim.tickCount; i++) {
+        textTicks.push((dy2 * i).toFixed(1))
+    }
+    textTicks.push(`${total}`)
+    const textSvgs = textTicks.map((val, idx) => {
+        return createText({
+            text: val,
+            x: dim.yAxisTextXi,
+            y: yTicks[idx],
+            yAlign: "central",
+            fontSize: dim.textFontSize,
+        } as TextParams)
+    })
+
+    
     svg.append(createRectangle(baseLine))
     svg.append(createRectangle(passesBar))
     svg.append(createRectangle(failsBar))
     svg.append(createRectangle(pillarLine))
+    ticks.forEach(tick => {
+        svg.append(tick)
+    })
+    textSvgs.forEach(textSvg => svg.append(textSvg))
+    svg.append(createText({
+        text: "pass",
+        x: passesBarCx,
+        y: svgWidth - dim.xAxisTextYi,
+        xAlign: "middle",
+        yAlign: "central",
+        fontSize: dim.textFontSize
+    } as TextParams))
+    svg.append(createText({
+        text: "fails",
+        x: failsBarCx,
+        y: svgWidth - dim.xAxisTextYi,
+        xAlign: "middle",
+        yAlign: "central",
+        fontSize: dim.textFontSize
+    } as TextParams))
     return svg
 }
 
 function createSvg() {
   const svg = document.createElementNS(SVG_NG, "svg")
-  svg.setAttribute('width', '400')
-  svg.setAttribute('height', '400')
   svg.setAttribute('viewBox', `0 0 100 100`)
   return svg
 }
@@ -200,4 +270,24 @@ function createRectangle({ x, y, width, height, fill }: RectParams) {
     rect.setAttribute('height', `${height}`)
     rect.setAttribute('fill', `${fill}`)
     return rect
+}
+
+function createText({ text, x, y, xAlign, yAlign, fontFamily, fontSize }: TextParams) {
+    const textSvg = document.createElementNS(SVG_NG, 'text')
+    textSvg.textContent = text
+    textSvg.setAttribute('x', `${x}`)
+    textSvg.setAttribute('y', `${y}`)
+    if (xAlign) {
+      textSvg.setAttribute('text-anchor', `${xAlign}`)
+    }
+    if (yAlign) {
+      textSvg.setAttribute('dominant-baseline', `${yAlign}`)
+    }
+    if (fontFamily) {
+      textSvg.setAttribute('font-family', `${fontFamily}`)
+    }
+    if (fontSize) {
+      textSvg.setAttribute('font-size', `${fontSize}`)
+    }
+    return textSvg
 }
