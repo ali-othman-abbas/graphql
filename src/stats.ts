@@ -265,7 +265,7 @@ async function getPassesVsFails(passesEl: HTMLElement, failsEl: HTMLElement, con
 
     const graph = drawPassesVsFailGraph({
         passes,
-        fails: 3,
+        fails,
         passesColor: 'green',
         failsColor: 'red'
     })
