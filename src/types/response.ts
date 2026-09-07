@@ -1,18 +1,20 @@
 import type { Repeat } from "./utilTypes"
 
-type Table = 'transaction' | 'user' | 'progress' | 'group'
+type Table = 'transaction' | 'user' | 'progress' | 'group' | 'groups'
 type Operation = 'sum' | 'count'
 
 type Aggregate<T extends Table, Op extends Operation, Shape extends Record<string, any> | undefined = undefined> = {
     [K in T as `${K}_aggregate`]: {
-        [K in Op as `${K}`]:
-        Op extends 'count'
-        ? Shape extends undefined
-          ? number
-          : "Error: count doesn't have a shape"
-        : Shape extends Record<string, any>
-          ? Shape
-          : "Error: shape wasn't provided for a shapeful operation"
+        'aggregate': {
+            [K in Op as `${K}`]:
+            Op extends 'count'
+            ? Shape extends undefined
+            ? number
+            : "Error: count doesn't have a shape"
+            : Shape extends Record<string, any>
+            ? Shape
+            : "Error: shape wasn't provided for a shapeful operation"
+        }
     }
 }
 
@@ -26,7 +28,7 @@ export type ErrorResponse = {
 }
 
 export type GraphqlRes<T extends Record<string, any>> = {
-    date: T
+    data: T
 }
 
 export type User = Retrieve<'user',{
@@ -37,7 +39,7 @@ export type User = Retrieve<'user',{
     }
 }, 1>
 
-export type TotalProjects = Aggregate<"transaction", "sum">
+export type TotalProjects = Aggregate<"progress", "count">
 
 export type TotalXp = Aggregate<"transaction", "sum", {
     amount: number
@@ -47,14 +49,33 @@ export type Level = Retrieve<'transaction', {
     amount: number
 }, 1>
 
-export type LastProjectCompleted = Retrieve<'group', {
-    object: {
-        name: string
-    }
-    members: {
-        user: {
-            id: number
-            login: string
-        }
-        }[]
+export type temp = Retrieve<"groups",{
+  group: {
+      object: {
+          name: string
+      }
+      members: {
+          userLogin: string
+      }[]
+  }
 }, 1>
+export type LastProjectCompleted = Retrieve<'user', Retrieve<"groups",{
+  group: {
+      object: {
+          name: string
+      }
+      members: {
+          userLogin: string
+      }[]
+  }
+}, 1>, 1>
+
+
+
+export type AuditRatioSum =
+  Aggregate<'transaction', 'sum', {
+    amount: number
+  }>
+
+
+export type ProgressCount = Aggregate<'progress', 'count'>

@@ -1,6 +1,7 @@
 import { deal, htmlify, must } from "./utils";
 import type { ErrorResponse } from "./types/response";
 import { storeToken } from "./store";
+import { navigate } from "./router";
 
 const ERROR_C = "error"
 const LOGIN_ERROR_MESSAGE_ID = 'login-error-message'
@@ -89,7 +90,8 @@ formEl.addEventListener("submit", async (e) => {
       return
   }
   hideErr(formSubmitErrEl)
-  storeToken(await res.text())
+  storeToken(await res.json())
+  navigate("/")
 })
 
 function checkFieldValidity(el: HTMLInputElement): FieldError {
