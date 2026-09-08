@@ -1,6 +1,10 @@
 import { degreeToRadian, polarToCartesian } from "./utils"
 
 const SVG_NG = "http://www.w3.org/2000/svg"
+export const GREEN = '#3ddc84'
+export const RED = `#ff5c5c`
+const TEXT_COLOR = '#7ec4ff'
+const TEXT_FONT_FAMILY = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif'
 
 type point = {
     x: number,
@@ -37,6 +41,7 @@ type TextParams = {
     yAlign: "central" | undefined
     fontSize: number | undefined
     fontFamily: string | undefined
+    fill: string | undefined
 }   
 
 
@@ -126,10 +131,10 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
         yf: svgHeight - 10,
         xi: 10,
         barWidth: 5,
-        floorHeight: 1,
-        pillerWidth: 1,
+        floorHeight: 0.5,
+        pillerWidth: 0.5,
         tickWidth: 3,
-        tickHeight: 1,
+        tickHeight: 0.5,
         xAxisTextYi: 5,
         textFontSize: 3
     }
@@ -197,6 +202,8 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
             y: yTicks[idx],
             yAlign: "central",
             fontSize: dim.textFontSize,
+            fontFamily: TEXT_FONT_FAMILY,
+            fill: TEXT_COLOR
         } as TextParams)
     })
 
@@ -215,7 +222,9 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
         y: svgWidth - dim.xAxisTextYi,
         xAlign: "middle",
         yAlign: "central",
-        fontSize: dim.textFontSize
+        fontSize: dim.textFontSize,
+        fontFamily: TEXT_FONT_FAMILY,
+        fill: TEXT_COLOR
     } as TextParams))
     svg.append(createText({
         text: "fails",
@@ -223,7 +232,9 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
         y: svgWidth - dim.xAxisTextYi,
         xAlign: "middle",
         yAlign: "central",
-        fontSize: dim.textFontSize
+        fontSize: dim.textFontSize,
+        fontFamily: TEXT_FONT_FAMILY,
+        fill: TEXT_COLOR
     } as TextParams))
     return svg
 }
@@ -272,7 +283,7 @@ function createRectangle({ x, y, width, height, fill }: RectParams) {
     return rect
 }
 
-function createText({ text, x, y, xAlign, yAlign, fontFamily, fontSize }: TextParams) {
+function createText({ text, x, y, xAlign, yAlign, fontFamily, fontSize, fill }: TextParams) {
     const textSvg = document.createElementNS(SVG_NG, 'text')
     textSvg.textContent = text
     textSvg.setAttribute('x', `${x}`)
@@ -288,6 +299,9 @@ function createText({ text, x, y, xAlign, yAlign, fontFamily, fontSize }: TextPa
     }
     if (fontSize) {
       textSvg.setAttribute('font-size', `${fontSize}`)
+    }
+    if (fill) {
+      textSvg.setAttribute('fill', `${fill}`)
     }
     return textSvg
 }

@@ -1,15 +1,484 @@
-.red-box {
-    background-color: red;
+/* ==========================================================================
+   Base / theme
+   ========================================================================== */
+ 
+:root {
+  --bg: #000000;
+  --bg-elevated: #0a0f1a;
+  --bg-card: #0d1420;
+  --fg: #4da6ff;
+  --fg-bright: #7ec4ff;
+  --fg-muted: #2f6fa8;
+  --border: #1a3352;
+  --up: #3ddc84;
+  --down: #ff5c5c;
+  --radius: 10px;
+  --gap: 16px;
+  --max-width: 960px;
 }
-.green-box {
-    background-color: green;
+ 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-.color-box {
-    width: 30px;
-    height: 30px;
+ 
+html {
+  height: 100%;
 }
+ 
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: var(--gap);
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+ 
+a {
+  color: var(--fg-bright);
+}
+ 
+/* ==========================================================================
+   Layout shell
+   ========================================================================== */
+ 
 
-svg {
-    width: 400px;
-    height: 400px;
+   #logout {
+     background: transparent;
+     color: #f87171;
+     border: 1px solid rgba(248, 113, 113, 0.4);
+     padding: 8px 18px;
+     border-radius: 6px;
+     font-size: 14px;
+     font-weight: 500;
+     cursor: pointer;
+     transition: background 0.15s ease, border-color 0.15s ease;
+   }
+   
+   #logout:hover {
+     background: rgba(248, 113, 113, 0.12);
+     border-color: rgba(248, 113, 113, 0.7);
+   }
+   
+   #logout:active {
+     background: rgba(248, 113, 113, 0.2);
+   }
+#app,
+#user-info,
+#stats {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
+ 
+/* ==========================================================================
+   User info header
+   ========================================================================== */
+ 
+#user-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap);
+  padding: var(--gap);
+  margin-bottom: var(--gap);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+ 
+#username-section,
+#email-section,
+#year-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+  flex: 1 1 140px;
+}
+ 
+#username-section > div:first-child,
+#email-section > div:first-child,
+#year-section > div:first-child {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+ 
+#logout {
+  margin-left: auto;
+}
+ 
+/* ==========================================================================
+   Stats grid
+   ========================================================================== */
+ 
+#stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--gap);
+}
+ 
+#stats > div {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap);
+}
+ 
+/* Explicit spans so rows always fill the full width, no leftover track */
+#projects-completed-stat,
+#xp-stat,
+#level-stat {
+  grid-column: span 2; /* 3 equal boxes per row */
+}
+ 
+#audit-ratio-graph-stat,
+#passes-vs-fails-stat {
+  grid-column: span 3; /* 2 equal, wide boxes per row */
+}
+ 
+#projects-completed-stat > div:first-child,
+#xp-stat > div:first-child,
+#level-stat > div:first-child,
+#audit-ratio-graph-stat > div:first-child,
+#passes-vs-fails-stat > div:first-child {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+ 
+#projects-completed-stat #projects-completed,
+#xp-stat #xp,
+#level-stat #level {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--fg-bright);
+}
+ 
+/* Last completed project card spans full width when there's room */
+#last-project-completed-stat {
+  grid-column: 1 / -1;
+}
+ 
+.project-name-group,
+.project-members-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+ 
+#group-member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+ 
+.group-member {
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--fg-bright);
+  background-color: var(--bg-elevated);
+}
+ 
+/* Audit ratio + passes/fails cards */
+#audit-ratio-graph-stat,
+#passes-vs-fails-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+ 
+#audit-ratio {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--fg-bright);
+  margin-bottom: 8px;
+}
+ 
+#audit-ratio-graph,
+#passes-vs-fails-graph {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+ 
+.audit-ratio-legend {
+  display: flex;
+  gap: var(--gap);
+  margin-top: 10px;
+}
+ 
+.color-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+ 
+.color-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+ 
+.red-box {
+  background-color: var(--down);
+}
+ 
+.green-box {
+  background-color: var(--up);
+}
+ 
+.passes-group,
+.fails-group {
+  display: flex;
+  gap: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+ 
+/* ==========================================================================
+   SVG graphs — responsive, not fixed 400px
+   ========================================================================== */
+ 
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+ 
+/* ==========================================================================
+   Buttons / inputs (shared by home + login)
+   ========================================================================== */
+ 
+button {
+  padding: 8px 16px;
+  border: 1px solid var(--fg-muted);
+  border-radius: var(--radius);
+  background-color: transparent;
+  color: var(--fg-bright);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+ 
+button:hover:not(:disabled) {
+  background-color: var(--bg-elevated);
+  border-color: var(--fg-bright);
+}
+ 
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+ 
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 11px 14px;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg-bright);
+  font-size: 1rem;
+}
+ 
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: var(--fg-muted);
+  opacity: 0.7;
+}
+ 
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--fg-bright);
+}
+ 
+input.error {
+  border-color: var(--down);
+}
+ 
+.error-message {
+  color: var(--down);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+ 
+/* ==========================================================================
+   Login page
+   ========================================================================== */
+ 
+/* The login markup is: body > div (wrapper) > [heading, error, form].
+   :has() lets us target that wrapper and the body without adding a class
+   in the HTML — it fires only on the page that actually contains a form. */
+ 
+body:has(.login-page) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+}
+ 
+.login-page {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+}
+ 
+.login-heading {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--fg-bright);
+  text-align: center;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+ 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  padding: 36px 32px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+ 
+.error-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+ 
+.error-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+ 
+#form-submit-error {
+  color: var(--down);
+  font-size: 0.9rem;
+  width: 100%;
+  padding: 10px 14px;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--down);
+  border-radius: var(--radius);
+  text-align: center;
+}
+div#email {
+    overflow-wrap: break-word;
+}
+ 
+/* Submit button — larger and solid so it reads as the primary action,
+   no motion/glow, just clear sizing and contrast */
+form button[type="submit"] {
+  margin-top: 6px;
+  padding: 13px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #041018;
+  background-color: var(--fg-bright);
+  border: 1px solid var(--fg-bright);
+}
+ 
+form button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--fg);
+  border-color: var(--fg);
+}
+ 
+form button[type="submit"]:disabled {
+  background-color: var(--bg-elevated);
+  color: var(--fg-muted);
+  border-color: var(--border);
+}
+ 
+/* ==========================================================================
+   Responsive breakpoints
+   ========================================================================== */
+ 
+@media (max-width: 640px) {
+  body {
+    padding: 12px;
+  }
+ 
+  form {
+    padding: 24px 20px;
+  }
+ 
+  #user-info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+ 
+  #logout {
+    margin-left: 0;
+    width: 100%;
+  }
+ 
+  #stats {
+    grid-template-columns: 1fr;
+  }
+ 
+  #projects-completed-stat,
+  #xp-stat,
+  #level-stat,
+  #audit-ratio-graph-stat,
+  #passes-vs-fails-stat {
+    grid-column: 1 / -1;
+  }
+ 
+  #audit-ratio-graph,
+  #passes-vs-fails-graph {
+    max-width: 220px;
+    margin: 0 auto;
+  }
+  #username-section, #email-section, #year-section {
+      flex: 0;
+  }
+}
+ 
+@media (min-width: 641px) and (max-width: 900px) {
+  #stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+ 
+  #projects-completed-stat,
+  #xp-stat,
+  #level-stat {
+    grid-column: span 1; /* 2 per row instead of 3 on tablets */
+  }
+ 
+  #audit-ratio-graph-stat,
+  #passes-vs-fails-stat {
+    grid-column: 1 / -1; /* stack full-width so graphs stay large */
+  }
+}
+ 

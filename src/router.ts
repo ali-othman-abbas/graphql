@@ -9,9 +9,8 @@ export function navigate(path: string) {
 }
 
 function router() {
-    const path = window.location.pathname
-    console.log(path)
-    const token = getToken()
+  const path = window.location.pathname
+  const token = getToken()
     if (path === "/login" && !token) {
         showLoginPage(appEl)
         return

@@ -14,22 +14,24 @@ const FIELD_MAX_LEN = 1000
 
 
 const loginPageEl = htmlify(/* html */ `
-  <div>
-      <div>Log into your reboot01 account</div>
-      <div id="${FORM_SUBMIT_ERROR_ID}" hidden></div>
+  <div class="login-page">
+    <div class="login-card">
+      <h1 class="login-heading">Log into your reboot01 account</h1>
+      <div id="${FORM_SUBMIT_ERROR_ID}" class="form-error" hidden></div>
       <form>
           <div class="error-group">
-            <label for="login">Username or email:</label>
-            <input id="login" type="text" maxLength="${FIELD_MAX_LEN}"/>
+            <label for="login-username">Username or email:</label>
+            <input id="login-username" type="text" maxLength="${FIELD_MAX_LEN}" autocomplete="off"/>
             <div id="${LOGIN_ERROR_MESSAGE_ID}" class="error-message" hidden></div>
           </div>
           <div class="error-group">
-            <label for="login">Password:</label>
-            <input id="login" type="password" maxLength="${FIELD_MAX_LEN}"/>
+            <label for="login-password">Password:</label>
+            <input id="login-password" type="password" maxLength="${FIELD_MAX_LEN}" autocomplete="off"/>
             <div id="${PASSWORD_ERROR_MESSAGE_ID}" class="error-message" hidden></div>
           </div>
           <button type="submit" disabled>Submit</button>
       </form>
+    </div>
   </div>
 `);
 
@@ -89,6 +91,8 @@ formEl.addEventListener("submit", async (e) => {
       showRequestErr(formSubmitErrEl, json)
       return
   }
+  loginEl.value = ''
+  passwordEl.value = ''
   hideErr(formSubmitErrEl)
   storeToken(await res.json())
   navigate("/")

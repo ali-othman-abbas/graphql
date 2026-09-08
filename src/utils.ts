@@ -10,10 +10,10 @@ export function must<T>(param: T | null | undefined): T {
   return param
 }
 
-export function htmlify(strEl: string): DocumentFragment {
+export function htmlify(strEl: string): HTMLElement {
   const template = document.createElement("template");
   template.innerHTML = strEl.trim();
-  return template.content
+  return template.content.firstElementChild as HTMLElement
 }
 
 export async function deal<T>(promise: Promise<T>): Promise<[T, null] | [null, Error]> {

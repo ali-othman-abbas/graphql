@@ -85,11 +85,11 @@ const homePageEl = htmlify(/*html */ `
               <div class="audit-ratio-legend">
                 <div class="color-group">
                     <div class="green-box color-box"></div>
-                    <div>up</div>
+                    <div class="center-text-vertically">up</div>
                 </div>
                 <div class="color-group">
                     <div class="red-box color-box"></div>
-                    <div>down</div>
+                    <div class="center-text-vertically">down</div>
                 </div>
               </div>
           </div>
@@ -239,8 +239,8 @@ async function getAuditRatio(el: HTMLElement, containerEl: HTMLElement) {
   const graph = drawAuditRatioGraph({
       up,
       down,
-      upColor: "green",
-      downColor: "red"
+      upColor: "#3ddc84",
+      downColor: "#ff5c5c"
   })
   containerEl.replaceChildren(graph)
 }
@@ -266,8 +266,8 @@ async function getPassesVsFails(passesEl: HTMLElement, failsEl: HTMLElement, con
     const graph = drawPassesVsFailGraph({
         passes,
         fails,
-        passesColor: 'green',
-        failsColor: 'red'
+        passesColor: '#3ddc84',
+        failsColor: '#ff5c5c'
     })
     containerEl.replaceChildren(graph)
 }
