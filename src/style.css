@@ -102,11 +102,20 @@ a {
  
 #username-section > div:first-child,
 #email-section > div:first-child,
-#year-section > div:first-child {
+#year-section > div:first-child 
+{
   font-size: 0.8rem;
   color: var(--fg-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+.last-project-header {
+    font-size: 1rem;
+        color: var(--fg-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 4px;
 }
  
 #logout {

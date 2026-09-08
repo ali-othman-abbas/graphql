@@ -130,7 +130,7 @@ export function drawPassesVsFailGraph({ passes, fails, passesColor, failsColor }
         yi: 10,
         yf: svgHeight - 10,
         xi: 10,
-        barWidth: 5,
+        barWidth: 10,
         floorHeight: 0.5,
         pillerWidth: 0.5,
         tickWidth: 3,

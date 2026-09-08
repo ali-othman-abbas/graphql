@@ -66,8 +66,8 @@ const homePageEl = htmlify(/*html */ `
               <div id="${LEVEL_ID}"></div>
           </div>
           <div id="last-project-completed-stat">
+            <div class="last-project-header">Last Completed Project:</div>
               <div class="project-name-group">
-                <div>Last Completed Project:</div>
                 <div id="${PROJECT_NAME_ID}"></div>
               </div>
               <div class="project-members-group">
