@@ -5,8 +5,7 @@ export const completedProjectCount = `
         _and:[
           {path:{_ilike:"%/bh-module/%"}}
           {_not:{path:{_ilike:"%/checkpoint%"}}}
-          {_not:{path:{_ilike:"%/piscine-js%"}}}
-          {_not:{path:{_ilike:"%/piscine-rust%"}}}
+          {_not:{path:{_ilike:"%/piscine%"}}}
           {grade:{_gte:1}}
           {isDone:{_eq:true}}
         ]
@@ -36,8 +35,7 @@ export const totalXp = `
         _and:[
           {type:{_eq:"xp"}}
           {path:{_ilike:"%/bh-module/%"}} 	
-          {_not:{path:{_ilike:"%/piscine-js/%"}}}
-          {_not:{path:{_ilike:"%/piscine-rust/%"}}}
+          {_not:{path:{_ilike:"%/piscine%/%"}}}
         ]
       }
       order_by:{createdAt:desc}
@@ -57,8 +55,7 @@ export const lastCompletedProject = `
           _and:[
             {group:{status:{_eq: finished}}}
             {path:{_ilike:"%/bh-module/%"}} 	
-            {_not:{path:{_ilike:"%/piscine-js/%"}}}
-            {_not:{path:{_ilike:"%/piscine-rust/%"}}}
+            {_not:{path:{_ilike:"%/piscine%/%"}}}
           ]
         }
         order_by:{createdAt:desc}
@@ -84,8 +81,7 @@ export const level = `
         _and:[
           {type:{_eq:"level"}}
           {path:{_ilike:"%/bh-module/%"}} 	
-          {_not:{path:{_ilike:"%/piscine-js/%"}}}
-          {_not:{path:{_ilike:"%/piscine-rust/%"}}}
+          {_not:{path:{_ilike:"%/piscine%/%"}}}
         ]
       }
       order_by:{
@@ -141,8 +137,7 @@ export const totalFails = `
         _and:[
           {path:{_ilike:"%/bh-module/%"}}
           {_not:{path:{_ilike:"%/checkpoint%"}}}
-          {_not:{path:{_ilike:"%/piscine-js%"}}}
-          {_not:{path:{_ilike:"%/piscine-rust%"}}}
+          {_not:{path:{_ilike:"%/piscine%"}}}
           {grade:{_eq:0}}
           {isDone:{_eq:true}}
         ]
